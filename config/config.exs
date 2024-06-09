@@ -12,6 +12,9 @@ config :cryptoarbitindex,
   ecto_repos: [CryptoArbitIndex.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :cryptoarbitindex, CryptoArbitIndex,
+  url_indodax_ticker: "https://indodax.com/api/ticker_all"
+
 # Configures the endpoint
 config :cryptoarbitindex, CryptoArbitIndexWeb.Endpoint,
   url: [host: "localhost"],
