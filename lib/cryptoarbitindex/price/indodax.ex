@@ -6,10 +6,10 @@ defmodule CryptoArbitIndex.Price.Indodax do
     field :high, :float
     field :low, :float
     field :pair, :string
-    field :last_price, :float
+    field :last, :float
     field :buy, :float
     field :sell, :float
-    field :volume_idr, :float
+    field :vol_idr, :float
     field :server_time, :integer
 
     timestamps(type: :utc_datetime)
@@ -18,7 +18,7 @@ defmodule CryptoArbitIndex.Price.Indodax do
   @doc false
   def changeset(indodax, attrs) do
     indodax
-    |> cast(attrs, [:pair, :high, :low, :last_price, :buy, :sell, :volume_idr, :server_time])
-    |> validate_required([:pair, :high, :low, :last_price, :buy, :sell, :volume_idr, :server_time])
+    |> cast(attrs, [:pair, :high, :low, :last, :buy, :sell, :vol_idr, :server_time])
+    |> validate_required([:pair, :high, :low, :last, :buy, :sell, :vol_idr, :server_time])
   end
 end

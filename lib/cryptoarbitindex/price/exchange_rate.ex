@@ -7,10 +7,10 @@ defmodule CryptoArbitIndex.Price.ExchangeRate do
     field :low, :float
     field :source, :string
     field :pair, :string
-    field :last_price, :float
+    field :last, :float
     field :buy, :float
     field :sell, :float
-    field :volume_usd, :float
+    field :vol_usd, :float
     field :server_time, :integer
 
     timestamps(type: :utc_datetime)
@@ -19,7 +19,7 @@ defmodule CryptoArbitIndex.Price.ExchangeRate do
   @doc false
   def changeset(exchange_rate, attrs) do
     exchange_rate
-    |> cast(attrs, [:pair, :high, :low, :last_price, :buy, :sell, :volume_usd, :server_time, :source])
-    |> validate_required([:pair, :high, :low, :last_price, :buy, :sell, :volume_usd, :server_time, :source])
+    |> cast(attrs, [:pair, :high, :low, :last, :buy, :sell, :vol_usd, :server_time, :source])
+    |> validate_required([:pair, :high, :low, :last, :buy, :sell, :vol_usd, :server_time, :source])
   end
 end

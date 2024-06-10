@@ -1,5 +1,4 @@
 defmodule CryptoArbitIndex.Tickers do
-  require Logger
   alias CryptoArbitIndex.Helpers
 
   @url_indodax_ticker Application.compile_env(:cryptoarbitindex, CryptoArbitIndex)[:url_indodax_ticker]

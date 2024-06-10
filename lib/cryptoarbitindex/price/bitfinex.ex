@@ -6,10 +6,10 @@ defmodule CryptoArbitIndex.Price.Bitfinex do
     field :high, :float
     field :low, :float
     field :pair, :string
-    field :last_price, :float
+    field :last, :float
     field :buy, :float
     field :sell, :float
-    field :volume_usd, :float
+    field :vol_usd, :float
     field :server_time, :integer
 
     timestamps(type: :utc_datetime)
@@ -18,7 +18,7 @@ defmodule CryptoArbitIndex.Price.Bitfinex do
   @doc false
   def changeset(bitfinex, attrs) do
     bitfinex
-    |> cast(attrs, [:pair, :high, :low, :last_price, :buy, :sell, :volume_usd, :server_time])
-    |> validate_required([:pair, :high, :low, :last_price, :buy, :sell, :volume_usd, :server_time])
+    |> cast(attrs, [:pair, :high, :low, :last, :buy, :sell, :vol_usd, :server_time])
+    |> validate_required([:pair, :high, :low, :last, :buy, :sell, :vol_usd, :server_time])
   end
 end
