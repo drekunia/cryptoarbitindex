@@ -15,7 +15,7 @@ defmodule CryptoArbitIndex.Application do
       # Start the Finch HTTP client for sending emails
       {Finch, name: CryptoArbitIndex.Finch},
       # Start a worker by calling: CryptoArbitIndex.Worker.start_link(arg)
-      # {CryptoArbitIndex.Worker, arg},
+      {CryptoArbitIndex.Worker, []},
       # Start to serve requests, typically the last entry
       CryptoArbitIndexWeb.Endpoint
     ]
