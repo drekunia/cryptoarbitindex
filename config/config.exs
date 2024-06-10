@@ -13,7 +13,8 @@ config :cryptoarbitindex,
   generators: [timestamp_type: :utc_datetime]
 
 config :cryptoarbitindex, CryptoArbitIndex,
-  url_indodax_ticker: "https://indodax.com/api/ticker_all"
+  url_indodax_ticker: "https://indodax.com/api/ticker_all",
+  url_bitfinex_ticker: "https://api-pub.bitfinex.com/v2/tickers"
 
 # Configures the endpoint
 config :cryptoarbitindex, CryptoArbitIndexWeb.Endpoint,
