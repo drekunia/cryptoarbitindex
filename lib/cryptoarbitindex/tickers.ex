@@ -13,15 +13,15 @@ defmodule CryptoArbitIndex.Tickers do
           |> Jason.decode!()
           |> Map.fetch!("tickers")
           |> Enum.filter(fn {key, _value} -> String.ends_with?(key, "_idr") end)
-          |> Enum.map(fn {key, value} ->
-            value
+          |> Enum.map(fn {pair_key, map_value} ->
+            map_value
             |> Enum.map(fn {key, value} ->
               float_value = if key != "server_time" and is_binary(value), do: Helpers.to_float(value), else: value
 
               {String.to_atom(key), float_value}
             end)
             |> Map.new()
-            |> Map.put(:pair, key)
+            |> Map.put(:pair, pair_key)
           end)
 
         {:ok, idr_pairs}
@@ -33,8 +33,8 @@ defmodule CryptoArbitIndex.Tickers do
 
   def fetch_bitfinex_ticker do
     case Finch.build(:get, "#{@url_bitfinex_ticker}?symbols=ALL") |> Finch.request(CryptoArbitIndex.Finch) do
-      {:ok, %Finch.Response{status: _status, body: body}} ->
-        server_time = :os.system_time(:second)
+      {:ok, %Finch.Response{status: _status, body: body, headers: headers}} ->
+        response_last_modified = Map.new(headers) |> Map.fetch!("last-modified") |> Helpers.rfc1123_to_unix_seconds()
 
         usd_pairs =
           body
@@ -51,7 +51,7 @@ defmodule CryptoArbitIndex.Tickers do
               low: low,
               pair: symbol,
               sell: bid,
-              server_time: server_time,
+              server_time: response_last_modified,
               vol_usd: volume
             }
           end)

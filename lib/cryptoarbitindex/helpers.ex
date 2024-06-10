@@ -13,4 +13,20 @@ defmodule CryptoArbitIndex.Helpers do
       true -> 0.0
     end
   end
+
+  def rfc1123_to_unix_seconds(datetime_str) do
+    case Timex.parse(datetime_str, "{WDshort}, {0D} {Mshort} {YYYY} {h24}:{m}:{s} GMT") do
+      {:ok, datetime} ->
+        naive_to_unix(datetime)
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def naive_to_unix(naive_datetime) do
+    case DateTime.from_naive(naive_datetime, "Etc/UTC") do
+      {:ok, datetime} -> DateTime.to_unix(datetime)
+      {:error, reason} -> {:error, reason}
+    end
+  end
 end
