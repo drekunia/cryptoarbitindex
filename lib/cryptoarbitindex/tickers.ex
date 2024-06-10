@@ -3,6 +3,7 @@ defmodule CryptoArbitIndex.Tickers do
   alias CryptoArbitIndex.Helpers
 
   @url_indodax_ticker Application.compile_env(:cryptoarbitindex, CryptoArbitIndex)[:url_indodax_ticker]
+  @url_indodax_usdt_idr Application.compile_env(:cryptoarbitindex, CryptoArbitIndex)[:url_indodax_usdt_idr_price]
   @url_bitfinex_ticker Application.compile_env(:cryptoarbitindex, CryptoArbitIndex)[:url_bitfinex_ticker]
 
   def fetch_indodax_ticker do
@@ -12,16 +13,11 @@ defmodule CryptoArbitIndex.Tickers do
           body
           |> Jason.decode!()
           |> Map.fetch!("tickers")
-          |> Enum.filter(fn {key, _value} -> String.ends_with?(key, "_idr") end)
+          |> Enum.filter(fn {key, _value} ->
+            String.ends_with?(key, "_idr") and key != "usdt_idr"
+          end)
           |> Enum.map(fn {pair_key, map_value} ->
-            map_value
-            |> Enum.map(fn {key, value} ->
-              float_value = if key != "server_time" and is_binary(value), do: Helpers.to_float(value), else: value
-
-              {String.to_atom(key), float_value}
-            end)
-            |> Map.new()
-            |> Map.put(:pair, pair_key)
+            Helpers.format_indodax_map(map_value, pair_key)
           end)
 
         {:ok, idr_pairs}
@@ -39,10 +35,12 @@ defmodule CryptoArbitIndex.Tickers do
         usd_pairs =
           body
           |> Jason.decode!()
-          |> Enum.filter(fn [head | _tail] -> !String.starts_with?(head, "f") end)
-          |> Enum.filter(fn [head | _tail] -> !String.contains?(head, "TEST") end)
-          |> Enum.filter(fn [head | _tail] -> !String.contains?(head, "USDT") end)
-          |> Enum.filter(fn [head | _tail] -> String.ends_with?(head, "USD") end)
+          |> Enum.filter(fn [head | _tail] ->
+            !String.starts_with?(head, "f")
+              and !String.contains?(head, "TEST")
+              and !String.contains?(head, "USDT")
+              and String.ends_with?(head, "USD")
+          end)
           |> Enum.map(fn [symbol, bid, _bid_size, ask, _ask_size, _daily_change, _daily_change_relative, last_price, volume, high, low] ->
             %{
               buy: ask,
@@ -57,6 +55,22 @@ defmodule CryptoArbitIndex.Tickers do
           end)
 
         {:ok, usd_pairs}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def fetch_usd_to_idr_price do
+    case Finch.build(:get, @url_indodax_usdt_idr) |> Finch.request(CryptoArbitIndex.Finch) do
+      {:ok, %Finch.Response{status: _status, body: body}} ->
+        usdt_idr =
+          body
+          |> Jason.decode!()
+          |> Map.fetch!("ticker")
+          |> Helpers.format_indodax_map("usdt_idr")
+
+        {:ok, usdt_idr}
 
       {:error, reason} ->
         {:error, reason}

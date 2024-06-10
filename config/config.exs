@@ -14,6 +14,7 @@ config :cryptoarbitindex,
 
 config :cryptoarbitindex, CryptoArbitIndex,
   url_indodax_ticker: "https://indodax.com/api/ticker_all",
+  url_indodax_usdt_idr_price: "https://indodax.com/api/ticker/usdtidr",
   url_bitfinex_ticker: "https://api-pub.bitfinex.com/v2/tickers"
 
 # Configures the endpoint

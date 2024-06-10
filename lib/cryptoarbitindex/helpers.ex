@@ -1,4 +1,15 @@
 defmodule CryptoArbitIndex.Helpers do
+  def format_indodax_map(map, pair_key) do
+    map
+    |> Enum.map(fn {key, value} ->
+      float_value = if key != "server_time" and is_binary(value), do: to_float(value), else: value
+
+      {String.to_atom(key), float_value}
+    end)
+    |> Map.new()
+    |> Map.put(:pair, pair_key)
+  end
+
   def to_float(number) do
     cond do
       is_integer(number) -> number / 1
